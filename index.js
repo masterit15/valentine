@@ -2,7 +2,7 @@ const express = require('express')
 const db = require('./db')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const { app, server } = require('./soket')
+const { app, server } = require('./socket')
 
 app.use(express.json({ extended: true }))
 app.use(bodyParser.json())
@@ -17,15 +17,14 @@ app.use(function (req, res, next) {
 });
 
 app.use(express.static(__dirname));
-app.use('/api/subscribe', require('./routes/webpush.routes'))
-app.use('/api/auth', require('./routes/auth.routes'))
-app.use('/api/claims', require('./routes/claim.routes'))
-app.use('/api/tml', require('./routes/timeline.routes'))
-app.use('/api/notifycation', require('./routes/notifycation.routes'))
-app.use('/api/users', require('./routes/user.routes'))
-app.use('/api/chat', require('./routes/chat.routes'))
-app.use('/api/upload', require('./routes/upload.routes'))
-app.use('/api/departament', require('./routes/departament.routes'))
+// app.use('/api/subscribe', require('./routes/webpush.routes'))
+// app.use('/api/auth', require('./routes/auth.routes'))
+// app.use('/api/claims', require('./routes/claim.routes'))
+// app.use('/api/notifycation', require('./routes/notifycation.routes'))
+app.use('/api', require('./routes/user.routes'))
+app.use('/api', require('./routes/valentine.routes'))
+app.use('/api', require('./routes/departament.routes'))
+// app.use('/api/upload', require('./routes/upload.routes'))
 
 if (process.env.NODE_ENV === 'production') {
     app.use('/', express.static(path.join(__dirname, 'web', 'dist')))
@@ -35,13 +34,10 @@ const HOST = process.env.HOST || 'localhost' //'0.0.0.0'
 
 async function start() {
     try {
-
         await db.authenticate();
-        server.listen(PORT, HOST, () => console.log(`App has been started on port ${PORT}...`))
-        console.log('Connection has been established successfully.');
+        server.listen(PORT, HOST, () => console.log(`Сервер запущен на порту ${PORT}...`))
       } catch (error) {
         console.error('Unable to connect to the database:', error);
-      
       }
 }
 
