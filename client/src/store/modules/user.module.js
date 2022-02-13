@@ -9,10 +9,9 @@ export default {
     }
   },
   actions: {
-    async auth({commit}, {name, password, departamentId}){
-      const res = await $api.post('/user', {name, password, departamentId})
-      console.log(res);
-      // commit('set_User', res)
+    async auth({commit}, {name, departamentId}){
+      const res = await $api.post('/user', {name, departamentId})
+      commit('set_User', res.data.user)
     }
   },
   getters: {
