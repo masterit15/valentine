@@ -9,9 +9,11 @@ export default {
     }
   },
   actions: {
-    async auth({commit}, {name, departamentId}){
-      const res = await $api.post('/user', {name, departamentId})
+    async auth({commit}, {username, departamentId, avatar}){
+      const res = await $api.post('/user', {username, departamentId, avatar})
       commit('set_User', res.data.user)
+      localStorage.setItem('user', JSON.stringify(res.data.user))
+      return res.data.success
     }
   },
   getters: {

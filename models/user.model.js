@@ -8,7 +8,7 @@ const User = db.define("user", {
       primaryKey: true,
       allowNull: false
     },
-    avatar: { type: sequelize.STRING, allowNull: false},
+    avatar: { type: sequelize.STRING, allowNull: true},
     username: { type: sequelize.STRING, allowNull: false},
     password: { type: sequelize.STRING, allowNull: false},
     subscription: { type: sequelize.JSON, allowNull: true},

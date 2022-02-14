@@ -26,14 +26,14 @@
       </label>
       <label for="name">
         ФИО
-        <input class="input" v-model="name" type="text" name="name" id="name">
+        <input class="input" v-model="username" type="text" name="name" id="name">
       </label>
       <label for="departament">
         Выберите свой департамент
         <input v-model="departamentId" type="hidden" style="display:none"/>
         <input class="input" v-model="departament" type="text" name="departament" id="departament">
         <ul class="input_dropdown" v-if="isShow">
-          <li v-for="departament in allDepartaments" :key="departament.id" @click="departamentId = departament.id, isShow = false">
+          <li v-for="departament in allDepartaments" :key="departament.id" @click="addDepartamentValue(departament)">
             {{ departament.name }}
           </li>
         </ul>
@@ -47,7 +47,7 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   data() {
     return {
-      name: '',
+      username: '',
       departament: '',
       departamentId: null,
       isShow: false,
@@ -71,17 +71,21 @@ export default {
   methods: {
   ...mapActions(['auth', 'getDepartament']),
     login(){
-      this.auth({name:this.name, departamentId: this.departamentId})
+      const success = this.auth({username: this.username, departamentId: this.departamentId, avatar: this.avatar})
+      if(success){
+        this.$router.push('/')
+      }
     },
-    departamentInput(){
-    console.log('wewewewe')
+    addDepartamentValue(departament){
+      this.departamentId = departament.id
+      this.departament = departament.name
+      this.isShow = false
     },
     addAvatar(){
       let fileName = this.$refs.avatar.files[0].name
       let avatar = document.querySelector('.avatar')
       this.avatar = this.$refs.avatar.files[0]
       avatar.style.backgroundImage = `url(${URL.createObjectURL(this.$refs.avatar.files[0])})`
-      console.log(avatar.style.backgroundImage);
     }
   },
 }

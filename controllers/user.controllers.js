@@ -1,12 +1,17 @@
+const bcrypt = require('bcrypt')
 const User = require('../models/user.model')
 class UserControllers {
   async addUser(req, res) {
-    const { username, departamentId } = req.body
     try {
+      const { username, departamentId, avatar } = req.body
+      let password = await hashPassword(username)
       const user = await User.create({
+        avatar,
         username,
+        password,
         departamentId
       });
+
       res.status(200).json({
         success: true,
         user
@@ -24,8 +29,8 @@ class UserControllers {
 
   async updateUser(req, res) {
     try {
-      const { id, username, departamentId, password, avatar } = req.query
-      const user = await User.update({ username, departamentId, password, avatar }, {
+      const { id, username, departamentId, avatar } = req.query
+      const user = await User.update({ username, departamentId, avatar }, {
         where: {
           id
         }
@@ -45,12 +50,22 @@ class UserControllers {
           id
         }
       })
-      res.json({ success: true})
+      res.json({ success: true })
     } catch (error) {
       res.status(400).json({ success: false })
     }
     res.json({ success: true })
   }
-}
 
+}
+function hashPassword(name) {
+  return new Promise((resolve, reject) => {
+    bcrypt.genSalt(10, function (err, salt) {
+      bcrypt.hash(name, salt, function (err, hash) {
+        if (err) reject(err)
+        resolve(hash)
+      })
+    })
+  })
+}
 module.exports = new UserControllers
